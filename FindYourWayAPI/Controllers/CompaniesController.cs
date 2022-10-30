@@ -64,7 +64,11 @@ namespace FindYourWayAPI.Controllers
         }
 
 
-
+        /// <summary>
+        /// Create a new company
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns></returns>
         // POST: api/Companies
         [HttpPost]
         public async Task<ActionResult<Company>> PostCompany(AddComanyRequest company)
