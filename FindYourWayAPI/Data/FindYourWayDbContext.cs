@@ -16,5 +16,6 @@ namespace FindYourWayAPI.Data
         public DbSet<Contact> Contacts{ get; set; }
         public DbSet<Milestone> Milestones { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Goal> Goals { get; set; }
     }
 }
