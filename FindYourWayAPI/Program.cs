@@ -32,6 +32,8 @@ builder.Services.AddDbContext<FindYourWayDbContext>(options =>
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<MilestoneService>();
+builder.Services.AddScoped<GoalsService>();
 
 var app = builder.Build();
 
