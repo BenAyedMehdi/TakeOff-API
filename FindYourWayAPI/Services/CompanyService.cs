@@ -22,6 +22,7 @@ namespace FindYourWayAPI.Services
                 .Include(c => c.Package)
                 .Include(c => c.Contact)
                 .Include(c => c.Milestones)
+                .ThenInclude(m=>m.Goals)
                 .Include(c => c.Products)
                 .ToListAsync();
         }
@@ -33,6 +34,7 @@ namespace FindYourWayAPI.Services
                 .Include(c => c.Package)
                 .Include(c=>c.Contact)
                 .Include(c => c.Milestones)
+                .ThenInclude(m => m.Goals)
                 .Include(c => c.Products)
                 .FirstOrDefaultAsync(c => c.CompanyId ==id);
             return company;

@@ -27,6 +27,7 @@ namespace FindYourWayAPI.Services
                 .ThenInclude(c => c.Contact)
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Milestones)
+                .ThenInclude(m=>m.Goals)
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Products)
                 .ToListAsync();
@@ -43,6 +44,7 @@ namespace FindYourWayAPI.Services
                 .ThenInclude(c => c.Contact)
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Milestones)
+                .ThenInclude(m => m.Goals)
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Products)
                 .FirstOrDefaultAsync(u => u.UserId == id);

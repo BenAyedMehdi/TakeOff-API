@@ -20,12 +20,15 @@ namespace FindYourWayAPI.Services
         {
             if (!companyService.CompanyExists(id)) return null;
             return await _context.Milestones
+                .Include(m=>m.Goals)
                 .Where(m => m.CompanyId == id)
                 .ToListAsync();
         }
         public async Task<Milestone> GetMilesone(int id)
         {
-            var milestone = await _context.Milestones.FindAsync(id);
+            var milestone = await _context.Milestones
+                .Include(m => m.Goals)
+                .FirstOrDefaultAsync(m=>m.MilestoneId==id);
 
             return milestone;
         }
