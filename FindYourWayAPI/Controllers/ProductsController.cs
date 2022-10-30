@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FindYourWayAPI.Data;
 using FindYourWayAPI.Models;
 using FindYourWayAPI.Services;
+using FindYourWayAPI.Models.DAO;
 
 namespace FindYourWayAPI.Controllers
 {
@@ -16,11 +17,13 @@ namespace FindYourWayAPI.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly FindYourWayDbContext _context;
+        private readonly ProductService productService;
         private readonly CompanyService _companyService;
 
-        public ProductsController(FindYourWayDbContext context)
+        public ProductsController(FindYourWayDbContext context , ProductService productService)
         {
             _context = context;
+            this.productService = productService;
             _companyService = new CompanyService(_context);
         }
 
@@ -32,7 +35,8 @@ namespace FindYourWayAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            var list = await productService.GetAllProducts();
+            return Ok(list);
         }
 
         // GET: api/Products/5
@@ -44,9 +48,9 @@ namespace FindYourWayAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Product>>> GetCompanyProducts(int id)
         {
-            if (!_companyService.CompanyExists(id)) return BadRequest();
+            var list = await productService.GetCompanyProducts(id);
 
-            return await _context.Products.Where(p => p.CompanyId == id).ToListAsync();
+            return Ok(list);
         }
 
         // GET: api/Products/Product/5
@@ -58,23 +62,24 @@ namespace FindYourWayAPI.Controllers
         [HttpGet("product/{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            if (!ProductExists(id)) return BadRequest();
+            if (!productService.ProductExists(id)) return BadRequest();
 
-            return await _context.Products.FindAsync(id);
+            return await productService.GetProduct(id);
         }
 
         // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Edit an existing product
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(AddProductRequest product)
         {
-            var company = await _companyService.GetCompany(product.CompanyId);
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+            var newProduct = await productService.AddProduct(product);  
+            return CreatedAtAction("GetProduct", new { id = newProduct.ProductId }, newProduct);
         }
-
+        /*
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -122,11 +127,8 @@ namespace FindYourWayAPI.Controllers
 
             return NoContent();
         }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.ProductId == id);
-        }
+        */
+        
         
     }
 }

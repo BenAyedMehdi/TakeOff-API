@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FindYourWayAPI.Data;
 using FindYourWayAPI.Models;
 using FindYourWayAPI.Models.DAO;
 using FindYourWayAPI.Services;
+using FindYourWayAPI.Data;
 
 namespace FindYourWayAPI.Controllers
 {
@@ -16,15 +16,12 @@ namespace FindYourWayAPI.Controllers
     [ApiController]
     public class MilestonesController : ControllerBase
     {
-        private readonly FindYourWayDbContext _context;
-        private readonly CompanyService _companyService;
+        private readonly MilestoneService milestoneService;
 
-        public MilestonesController(FindYourWayDbContext context)
+        public MilestonesController( MilestoneService milestoneService)
         {
-            _context = context;
-            _companyService = new CompanyService(_context);
+            this.milestoneService = milestoneService;
         }
-
 
         // GET: api/Milestones/5
         /// <summary>
@@ -35,10 +32,8 @@ namespace FindYourWayAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Milestone>>> GetCompanyMilestones(int id)
         {
-            if (!_companyService.CompanyExists(id)) return BadRequest();
-            return await _context.Milestones
-                .Where(m=>m.CompanyId==id)
-                .ToListAsync();
+            var list = await milestoneService.GetCompanyMilestones(id);
+            return Ok(list);
         }
 
 
@@ -51,37 +46,28 @@ namespace FindYourWayAPI.Controllers
         [HttpGet("milestone/{id}")]
         public async Task<ActionResult<Milestone>> GetMilesone(int id)
         {
-            
-            var milestone = await _context.Milestones.FindAsync(id);
 
+            var milestone = await milestoneService.GetMilesone(id);
             if (milestone == null)
             {
                 return NotFound();
             }
-
             return milestone;
         }
 
 
         // POST: api/Milestones
+        /// <summary>
+        /// Add a new milestone
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Milestone>> PostMilestone(AddMilestoneRequest request)
         {
-            var company = await _companyService.GetCompany(request.CompanyId);
-            if (company == null) return NotFound();
-
-            if (request.MilestoneName == null) return BadRequest();
-            var milestone = new Milestone
-            {
-                MilestoneName = request.MilestoneName,
-                CompanyId = request.CompanyId,
-                Company = company
-            };
-
-            _context.Milestones.Add(milestone);
-            await _context.SaveChangesAsync();
-
+            var milestone = await milestoneService.AddMilestone(request);
+            if (milestone == null) return BadRequest();
             return Ok(milestone);
         }
 
@@ -135,10 +121,7 @@ namespace FindYourWayAPI.Controllers
             return NoContent();
         }
         */
-        private bool MilestoneExists(int id)
-        {
-            return _context.Milestones.Any(e => e.MilestoneId == id);
-        }
         
+
     }
 }

@@ -11,14 +11,10 @@ namespace FindYourWayAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly FindYourWayDbContext _context;
-        private readonly CompanyService companyService;
         private readonly UserService _userService;
 
-        public UsersController(FindYourWayDbContext context, UserService userService, CompanyService companyService)
+        public UsersController( UserService userService)
         {
-            _context = context;
-            this.companyService = companyService;
             _userService = userService;
         }
 
