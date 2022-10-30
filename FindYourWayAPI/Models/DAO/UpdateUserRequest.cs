@@ -8,6 +8,6 @@
         public string Email { get; set; } = string.Empty;
         public string Position { get; set; } = string.Empty;
 
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; } = 0;
     }
 }

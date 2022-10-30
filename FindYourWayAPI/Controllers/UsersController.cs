@@ -1,6 +1,7 @@
 ﻿using FindYourWayAPI.Data;
 using FindYourWayAPI.Models;
 using FindYourWayAPI.Models.DAO;
+using FindYourWayAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,14 @@ namespace FindYourWayAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly FindYourWayDbContext _context;
+        private readonly CompanyService companyService;
+        private readonly UserService _userService;
 
-        public UsersController(FindYourWayDbContext context)
+        public UsersController(FindYourWayDbContext context, UserService userService, CompanyService companyService)
         {
             _context = context;
+            this.companyService = companyService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -24,12 +29,7 @@ namespace FindYourWayAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
-            var list = await _context.Users
-                .Include(u => u.Company)
-                .ThenInclude(c => c.Field)
-                .Include(c => c.Company)
-                .ThenInclude(c => c.Package)
-                .ToListAsync();
+            var list = await _userService.GetUsers();      
             return Ok(list);
         }
 
@@ -44,12 +44,7 @@ namespace FindYourWayAPI.Controllers
         public async Task<ActionResult<User>> GetUserByID(int id)
         {
             if (id == 0) return BadRequest();
-            var item = await _context.Users
-                .Include(u=>u.Company)
-                .ThenInclude(c=>c.Field)
-                .Include(c=>c.Company)
-                .ThenInclude(c=>c.Package)
-                .FirstOrDefaultAsync(u => u.UserId== id);
+            var item = await _userService.GetUserByID(id);
             if (item == null) return NotFound();
             return Ok(item);
         }
@@ -62,18 +57,8 @@ namespace FindYourWayAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddUser([FromBody] AddUserRequest request)
         {
-            if (request.FirstName== null || request.FirstName== string.Empty) return BadRequest();
-            if (request.LastName== null || request.LastName== string.Empty) return BadRequest();
-            if (request.Email == null || request.Email== string.Empty) return BadRequest();
-            var newUser = new User
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                Position = request.Position
-            };
-            await _context.Users.AddAsync(newUser);
-            await _context.SaveChangesAsync();
+            var newUser = await _userService.AddUser(request);
+            if (newUser == null) return BadRequest();
             return Ok(newUser);
         }
 
@@ -87,47 +72,13 @@ namespace FindYourWayAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, UpdateUserRequest request)
         {
-            if (id != request.UserId) { return BadRequest(); }
+            if (!_userService.UserExists(id)) return NotFound();
+            
+            var newUser = await _userService.UpdateUser(id, request);
+            if (newUser == null) return BadRequest();
 
-            var oldUser = await _context.Users.Include(u=>u.Company).FirstOrDefaultAsync(u=>u.UserId==id);
-            if (oldUser== null) { return BadRequest(); }
-
-            var company = await _context.Companies
-                .Include(c=>c.Package)
-                .Include(c=>c.Field)
-                .FirstOrDefaultAsync(c=>c.CompanyId==request.CompanyId);
-            if (company == null) { return BadRequest(); }
-
-            oldUser.FirstName= request.FirstName;
-            oldUser.LastName= request.LastName;
-            oldUser.Email= request.Email;
-            oldUser.Position= request.Position;
-
-            oldUser.Company= company;
-
-            _context.Entry(oldUser).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Ok(request);
+            return Ok(newUser);
         }
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.UserId== id);
-        }
+       
     }
 }

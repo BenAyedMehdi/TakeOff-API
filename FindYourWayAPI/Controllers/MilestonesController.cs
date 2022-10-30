@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FindYourWayAPI.Data;
 using FindYourWayAPI.Models;
 using FindYourWayAPI.Models.DAO;
+using FindYourWayAPI.Services;
 
 namespace FindYourWayAPI.Controllers
 {
@@ -16,10 +17,12 @@ namespace FindYourWayAPI.Controllers
     public class MilestonesController : ControllerBase
     {
         private readonly FindYourWayDbContext _context;
+        private readonly CompanyService _companyService;
 
         public MilestonesController(FindYourWayDbContext context)
         {
             _context = context;
+            _companyService = new CompanyService(_context);
         }
 
 
@@ -32,7 +35,7 @@ namespace FindYourWayAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Milestone>>> GetCompanyMilestones(int id)
         {
-            if (!CompanyExists(id)) return BadRequest();
+            if (!_companyService.CompanyExists(id)) return BadRequest();
             return await _context.Milestones
                 .Where(m=>m.CompanyId==id)
                 .ToListAsync();
@@ -65,11 +68,7 @@ namespace FindYourWayAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Milestone>> PostMilestone(AddMilestoneRequest request)
         {
-            var company = await _context.Companies.
-                Include(c => c.Field)
-                .Include(c => c.Package)
-                .Include(c => c.Milestones)
-                .FirstOrDefaultAsync(c => c.CompanyId == request.CompanyId);
+            var company = await _companyService.GetCompany(request.CompanyId);
             if (company == null) return NotFound();
 
             if (request.MilestoneName == null) return BadRequest();
@@ -83,7 +82,7 @@ namespace FindYourWayAPI.Controllers
             _context.Milestones.Add(milestone);
             await _context.SaveChangesAsync();
 
-            return Ok(company);
+            return Ok(milestone);
         }
 
         /*
@@ -140,9 +139,6 @@ namespace FindYourWayAPI.Controllers
         {
             return _context.Milestones.Any(e => e.MilestoneId == id);
         }
-        private bool CompanyExists(int id)
-        {
-            return _context.Companies.Any(e => e.CompanyId == id);
-        }
+        
     }
 }

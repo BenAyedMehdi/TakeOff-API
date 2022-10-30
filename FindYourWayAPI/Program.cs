@@ -1,4 +1,5 @@
 using FindYourWayAPI.Data;
+using FindYourWayAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -28,6 +29,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<FindYourWayDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnetion"))
 );
+builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<UserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

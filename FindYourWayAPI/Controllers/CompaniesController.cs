@@ -9,6 +9,7 @@ using FindYourWayAPI.Data;
 using FindYourWayAPI.Models;
 using FindYourWayAPI.Models.DAO;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using FindYourWayAPI.Services;
 
 namespace FindYourWayAPI.Controllers
 {
@@ -16,11 +17,11 @@ namespace FindYourWayAPI.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly FindYourWayDbContext _context;
+        private readonly CompanyService _companyService;
 
-        public CompaniesController(FindYourWayDbContext context)
+        public CompaniesController(CompanyService companyService)
         {
-            _context = context;
+            _companyService = companyService;
         }
 
         // GET: api/Companies
@@ -31,12 +32,7 @@ namespace FindYourWayAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
         {
-            return await _context.Companies
-                .Include(c=>c.Field)
-                .Include(c=>c.Package)
-                .Include(c => c.Contact)
-                .Include(c=>c.Milestones)
-                .ToListAsync();
+            return Ok( await _companyService.GetCompanies());
         }
 
 
@@ -49,11 +45,7 @@ namespace FindYourWayAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Company>> GetCompany(int id)
         {
-            var company = await _context.Companies.
-                Include(c => c.Field)
-                .Include(c=>c.Package)
-                .Include(c=>c.Milestones)
-                .FirstOrDefaultAsync(c=>c.CompanyId == id);
+            var company = await _companyService.GetCompany(id);
 
             if (company == null)
             {
@@ -73,25 +65,7 @@ namespace FindYourWayAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Company>> PostCompany(AddComanyRequest company)
         {
-            var package = await _context.Packages.FindAsync(company.PackageId);
-            if (package == null)
-            {
-                return BadRequest();
-            }
-            var field = await _context.Fields.FindAsync(company.FieldId);
-            if(field == null)
-            {
-                return BadRequest();
-            }
-            var newCompany = new Company
-            {
-                CompnayName = company.CompnayName,
-                NumberOfEmployees = company.NumberOfEmployees,
-                Field = field,
-                Package = package
-            };
-            _context.Companies.Add(newCompany);
-            await _context.SaveChangesAsync();
+            var newCompany = await _companyService.AddCompany(company);
 
             return CreatedAtAction("GetCompany", new { id = newCompany.CompanyId }, newCompany);
         }
@@ -107,41 +81,9 @@ namespace FindYourWayAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany(int id, UpdateCompanyRequest request)
         {
-            if (id != request.CompanyId) {return BadRequest(); }
-            
-            var oldCompany = await _context.Companies.FindAsync(id);
-            if (oldCompany == null) {return BadRequest();}
-            
-            var field = await _context.Fields.FindAsync(request.FieldId);
-            if (field == null) { return BadRequest();}
-
-            var package = await _context.Packages.FindAsync(request.PackageId);
-            if (package == null) { return BadRequest(); }
-
-            oldCompany.CompnayName = request.CompnayName;
-            oldCompany.NumberOfEmployees = request.NumberOfEmployees;
-            oldCompany.Field = field;
-            oldCompany.Package = package;
-
-            _context.Entry(oldCompany).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CompanyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetCompany", new { id = id }, oldCompany);
+            if (!_companyService.CompanyExists(id)) return NotFound();
+            var company = await _companyService.UpdateCompany(id, request);
+            return CreatedAtAction("GetCompany", new { id = id }, company);
         }
 
 
@@ -155,42 +97,9 @@ namespace FindYourWayAPI.Controllers
         [HttpPut("AddContact/{id}")]
         public async Task<IActionResult> AddContactToCompany(int id, AddContactRequest request)
         {
-            if (id != request.OwnerId) { return BadRequest(); }
+            if (!_companyService.CompanyExists(id)) return NotFound();
 
-            var oldCompany = await _context.Companies.FindAsync(id);
-            if (oldCompany == null) { return BadRequest(); }
-
-            var newContact = new Contact
-            {
-                Email = request.Email,
-                Adress = request.Adress,
-                PhoneNumber = request.PhoneNumber,
-                Website = request.Website,
-                OwnerId = request.OwnerId
-            };
-            await _context.Contacts.AddAsync(newContact);   
-            await _context.SaveChangesAsync();
-
-            oldCompany.Contact = newContact;
-
-            _context.Entry(oldCompany).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CompanyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            var newContact = _companyService.AddContactToCompany(id, request);
             return Ok(newContact);
         }
 
@@ -203,21 +112,14 @@ namespace FindYourWayAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
-            var company = await _context.Companies.FindAsync(id);
-            if (company == null)
+            if (!_companyService.CompanyExists(id))
             {
                 return NotFound();
             }
-
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
-
+            await _companyService.DeleteCompany(id);
             return NoContent();
         }
 
-        private bool CompanyExists(int id)
-        {
-            return _context.Companies.Any(e => e.CompanyId == id);
-        }
+        
     }
 }
