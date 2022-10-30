@@ -10,6 +10,7 @@
         public Field Field { get; set; }
         public Contact? Contact { get; set; }
         public List<Milestone> Milestones { get; set; }
+        public List<Product> Products { get; set; }
         public Package Package { get; set; }
     }
 }
