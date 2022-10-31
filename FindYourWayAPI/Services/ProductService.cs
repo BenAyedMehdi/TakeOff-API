@@ -36,7 +36,7 @@ namespace FindYourWayAPI.Services
         {
             return await _context.Products
                 .Include(p => p.Category)
-                .FirstOrDefaultAsync(p=>p.ProductId==id);
+                .FirstOrDefaultAsync(p => p.ProductId == id);
         }
         public bool ProductExists(int id)
         {

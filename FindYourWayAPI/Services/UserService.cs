@@ -33,6 +33,7 @@ namespace FindYourWayAPI.Services
                 .ThenInclude(m => m.Category)
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Products)
+                .ThenInclude(p=>p.Category)
                 .ToListAsync();
             return list;
         }
@@ -53,6 +54,7 @@ namespace FindYourWayAPI.Services
                 .ThenInclude(m => m.Category)
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Products)
+                .ThenInclude(p => p.Category)
                 .FirstOrDefaultAsync(u => u.UserId == id);
             return item;
         }
