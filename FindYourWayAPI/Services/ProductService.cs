@@ -19,6 +19,7 @@ namespace FindYourWayAPI.Services
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             var list = await _context.Products
+                .Include(p=>p.Category)
                .ToListAsync();
             return list;
         }
@@ -26,11 +27,16 @@ namespace FindYourWayAPI.Services
         {
             if (!companyService.CompanyExists(id)) return null;
 
-            return await _context.Products.Where(p => p.CompanyId == id).ToListAsync(); 
+            return await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.CompanyId == id)
+                .ToListAsync(); 
         }
         public async Task<Product> GetProduct(int id)
         {
-            return await _context.Products.FindAsync(id);
+            return await _context.Products
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p=>p.ProductId==id);
         }
         public bool ProductExists(int id)
         {
@@ -39,13 +45,17 @@ namespace FindYourWayAPI.Services
         public async Task<Product> AddProduct(AddProductRequest product)
         {
             var company = await companyService.GetCompany(product.CompanyId);
+            var category = await _context.Categories.FindAsync(product.CategoryId);
+            if (category == null) return null;
+
             var newProduct = new Product
             {
                 ProductName = product.ProductName,
                 Description = product.Description,
                 Price = product.Price,
                 CompanyId = company.CompanyId,
-                Company = company
+                Company = company,
+                Category = category
             };
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
