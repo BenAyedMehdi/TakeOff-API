@@ -111,23 +111,15 @@ namespace FindYourWayAPI.Controllers
             return NoContent();
         }
 
-
+        */
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-
+            if(!productService.ProductExists(id)) return NotFound();
+            await productService.DeleteProduct(id);
             return NoContent();
         }
-        */
         
         
     }

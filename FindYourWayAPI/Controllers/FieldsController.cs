@@ -1,6 +1,7 @@
 ﻿using FindYourWayAPI.Data;
 using FindYourWayAPI.Models;
 using FindYourWayAPI.Models.DAO;
+using FindYourWayAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,10 +51,11 @@ namespace FindYourWayAPI.Controllers
         }
 
 
-
-
-
-        /*
+        /// <summary>
+        /// Add a new field
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> AddField([FromBody] AddFieldRequest request)
         {
@@ -62,6 +64,26 @@ namespace FindYourWayAPI.Controllers
             await _context.Fields.AddAsync(newField);
             await _context.SaveChangesAsync();
             return Ok(newField);
-        }*/
+        }
+
+        /// <summary>
+        /// Delete a field by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteField(int id)
+        {
+            var field = await _context.Fields.FindAsync(id);
+            if (field == null)
+            {
+                return NotFound();
+            }
+
+            _context.Fields.Remove(field);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

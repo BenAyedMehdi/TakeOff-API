@@ -75,6 +75,19 @@ namespace FindYourWayAPI.Controllers
 
             return Ok(newUser);
         }
-       
+
+
+        /// <summary>
+        /// Delete a user by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            if (!_userService.UserExists(id)) return NotFound();
+            await _userService.DeleteUser(id);
+            return NoContent();
+        }
     }
 }

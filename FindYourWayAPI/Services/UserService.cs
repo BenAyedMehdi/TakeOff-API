@@ -87,7 +87,13 @@ namespace FindYourWayAPI.Services
             await _context.SaveChangesAsync();
             return oldUser;
         }
+        public async Task DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
 
+        }
         public bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);

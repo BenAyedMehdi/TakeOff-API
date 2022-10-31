@@ -104,23 +104,16 @@ namespace FindYourWayAPI.Controllers
         }
 
         
-
+        */
         // DELETE: api/Milestones/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMilestone(int id)
         {
-            var milestone = await _context.Milestones.FindAsync(id);
-            if (milestone == null)
-            {
-                return NotFound();
-            }
-
-            _context.Milestones.Remove(milestone);
-            await _context.SaveChangesAsync();
-
+            if (!milestoneService.MilestoneExists(id)) return NotFound();
+            await milestoneService.DeleteMilestone(id);
             return NoContent();
         }
-        */
+        
         
 
     }

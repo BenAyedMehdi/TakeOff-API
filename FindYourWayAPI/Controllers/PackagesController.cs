@@ -45,7 +45,7 @@ namespace FindYourWayAPI.Controllers
             return Ok(item);
         }
 
-        /*
+        
         [HttpPost]
         public async Task<ActionResult> AddPackage([FromBody] AddPackageRequest request)
         {
@@ -60,8 +60,25 @@ namespace FindYourWayAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(newPackage);
         }
-        */
+        /// <summary>
+        /// Delete a Package by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePackage(int id)
+        {
+            var package = await _context.Packages.FindAsync(id);
+            if (package == null)
+            {
+                return NotFound();
+            }
 
+            _context.Packages.Remove(package);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 
 }

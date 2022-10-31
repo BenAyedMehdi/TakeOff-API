@@ -50,6 +50,15 @@ namespace FindYourWayAPI.Services
 
             return milestone;
         }
+        public async Task DeleteMilestone(int id)
+        {
+            var milestone = await _context.Milestones.FindAsync(id);
+            
+
+            _context.Milestones.Remove(milestone);
+            await _context.SaveChangesAsync();
+            
+        }
         public bool MilestoneExists(int id)
         {
             return _context.Milestones.Any(e => e.MilestoneId == id);

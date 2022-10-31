@@ -52,9 +52,16 @@ namespace FindYourWayAPI.Services
 
             return newProduct;
         }
+        public async Task DeleteProduct(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+        }
         public async Task PutProduct(int id, Product product)
         {
-         
             
             _context.Entry(product).State = EntityState.Modified;
 
