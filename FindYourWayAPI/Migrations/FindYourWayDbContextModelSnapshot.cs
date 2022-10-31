@@ -36,7 +36,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Company", b =>
@@ -71,7 +71,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Contact", b =>
@@ -103,7 +103,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasKey("ContactId");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Contacts", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Field", b =>
@@ -120,7 +120,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasKey("FieldId");
 
-                    b.ToTable("Fields");
+                    b.ToTable("Fields", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Goal", b =>
@@ -154,7 +154,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasIndex("MilestoneId");
 
-                    b.ToTable("Goals");
+                    b.ToTable("Goals", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Milestone", b =>
@@ -181,7 +181,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Milestones");
+                    b.ToTable("Milestones", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Package", b =>
@@ -205,7 +205,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasKey("PackageId");
 
-                    b.ToTable("Packages");
+                    b.ToTable("Packages", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Product", b =>
@@ -240,7 +240,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Report", b =>
@@ -269,7 +269,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Reports", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.User", b =>
@@ -303,7 +303,7 @@ namespace FindYourWayAPI.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("FindYourWayAPI.Models.Company", b =>

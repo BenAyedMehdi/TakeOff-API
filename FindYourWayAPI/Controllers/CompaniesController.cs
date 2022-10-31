@@ -57,7 +57,7 @@ namespace FindYourWayAPI.Controllers
 
 
         /// <summary>
-        /// Create a new company
+        /// Create a new company not assigned to any user, use (user put request to link it)
         /// </summary>
         /// <param name="company"></param>
         /// <returns></returns>
