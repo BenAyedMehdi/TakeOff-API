@@ -83,7 +83,7 @@ namespace FindYourWayAPI.Controllers
         }
         // POST: api/Products
         /// <summary>
-        /// Edit an existing product
+        /// Add a product
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
@@ -127,6 +127,11 @@ namespace FindYourWayAPI.Controllers
 
         */
         // DELETE: api/Products/5
+        /// <summary>
+        /// Delete a product by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
