@@ -12,6 +12,7 @@
         public Contact? Contact { get; set; }
         public List<Milestone> Milestones { get; set; }
         public List<Product> Products { get; set; }
+        public List<Report>? Reports { get; set; }
         public Package Package { get; set; }
     }
 }

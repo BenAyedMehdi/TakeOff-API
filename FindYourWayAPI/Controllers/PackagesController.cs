@@ -45,7 +45,11 @@ namespace FindYourWayAPI.Controllers
             return Ok(item);
         }
 
-        
+        /// <summary>
+        /// Add package
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> AddPackage([FromBody] AddPackageRequest request)
         {

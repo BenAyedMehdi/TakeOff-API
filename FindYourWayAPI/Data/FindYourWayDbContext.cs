@@ -18,5 +18,6 @@ namespace FindYourWayAPI.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Goal> Goals { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Report> Reports { get; set; }
     }
 }

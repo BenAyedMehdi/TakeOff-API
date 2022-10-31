@@ -105,6 +105,11 @@ namespace FindYourWayAPI.Controllers
 
         
         */
+        /// <summary>
+        /// Delete milestone by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/Milestones/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMilestone(int id)
