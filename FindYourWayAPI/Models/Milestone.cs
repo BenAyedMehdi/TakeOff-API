@@ -7,6 +7,7 @@ namespace FindYourWayAPI.Models
         public int MilestoneId { get; set; }
         public string MilestoneName { get; set; }
         public List<Goal> Goals { get; set; }
+        public Category Category { get; set; }
         public int CompanyId { get; set; }
         [JsonIgnore]
         public Company Company { get; set; }

@@ -4,6 +4,7 @@ using FindYourWayAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindYourWayAPI.Migrations
 {
     [DbContext(typeof(FindYourWayDbContext))]
-    partial class FindYourWayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221031001647_addCategoryToMilestones")]
+    partial class addCategoryToMilestones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,9 +218,6 @@ namespace FindYourWayAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -235,8 +234,6 @@ namespace FindYourWayAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CompanyId");
 
@@ -334,19 +331,11 @@ namespace FindYourWayAPI.Migrations
 
             modelBuilder.Entity("FindYourWayAPI.Models.Product", b =>
                 {
-                    b.HasOne("FindYourWayAPI.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FindYourWayAPI.Models.Company", "Company")
                         .WithMany("Products")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("Company");
                 });

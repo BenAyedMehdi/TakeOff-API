@@ -8,6 +8,7 @@ namespace FindYourWayAPI.Models
         public string ProductName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Price { get; set; } = string.Empty;
+        public Category Category { get; set; }
 
         public int CompanyId { get; set; } = 0;
         [JsonIgnore]
