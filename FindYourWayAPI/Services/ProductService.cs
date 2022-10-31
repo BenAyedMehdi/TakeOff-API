@@ -30,7 +30,17 @@ namespace FindYourWayAPI.Services
             return await _context.Products
                 .Include(p => p.Category)
                 .Where(p => p.CompanyId == id)
-                .ToListAsync(); 
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Product>> GetAllCategoryProducts(int id)
+        {
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null) return null;
+
+            return await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.Category == category)
+                .ToListAsync();
         }
         public async Task<Product> GetProduct(int id)
         {

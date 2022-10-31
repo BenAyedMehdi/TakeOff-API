@@ -55,6 +55,21 @@ namespace FindYourWayAPI.Controllers
 
         // GET: api/Products/Product/5
         /// <summary>
+        /// Returns all products of specified category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("category/{id}")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllCategoryProducts(int id)
+        {
+
+            var list= await productService.GetAllCategoryProducts(id);
+            return Ok(list);
+        }
+
+
+        // GET: api/Products/Product/5
+        /// <summary>
         /// Returns all products of specified company
         /// </summary>
         /// <param name="id"></param>
@@ -66,7 +81,6 @@ namespace FindYourWayAPI.Controllers
 
             return await productService.GetProduct(id);
         }
-
         // POST: api/Products
         /// <summary>
         /// Edit an existing product
