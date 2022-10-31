@@ -7,7 +7,9 @@
 * password : Findyourway!
 
 
-
-
 #### To keep in mind:
 * After creating a company, use the User Put request and include companyID in the request to link it
+
+
+
+![Alt text](./data-model.PNG?raw=true "Data model diagram")
