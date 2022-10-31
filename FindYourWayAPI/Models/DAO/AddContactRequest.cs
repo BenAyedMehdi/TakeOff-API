@@ -2,11 +2,11 @@
 {
     public class AddContactRequest
     {
-        public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Adress { get; set; } = string.Empty;
-        public string Website { get; set; } = string.Empty;
+        public string Email { get; set; } 
+        public string PhoneNumber { get; set; }
+        public string Adress { get; set; } 
+        public string Website { get; set; } 
 
-        public int OwnerId { get; set; } = 0;
+        public int OwnerId { get; set; }
     }
 }

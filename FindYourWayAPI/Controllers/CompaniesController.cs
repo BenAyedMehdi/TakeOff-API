@@ -95,11 +95,12 @@ namespace FindYourWayAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("AddContact/{id}")]
-        public async Task<IActionResult> AddContactToCompany(int id, AddContactRequest request)
+        public async Task<ActionResult<Contact>> AddContactToCompany(int id, AddContactRequest request)
         {
             if (!_companyService.CompanyExists(id)) return NotFound();
 
-            var newContact = _companyService.AddContactToCompany(id, request);
+            var newContact = await _companyService.AddContactToCompany(id, request);
+            if (newContact == null) return BadRequest();
             return Ok(newContact);
         }
 
