@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 builder.Services.AddDbContext<FindYourWayDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnetion"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
 );
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<UserService>();
