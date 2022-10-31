@@ -26,6 +26,8 @@ namespace FindYourWayAPI.Services
                 .Include(c => c.Company)
                 .ThenInclude(c => c.Contact)
                 .Include(c => c.Company)
+                .ThenInclude(c => c.Reports)
+                .Include(c => c.Company)
                 .ThenInclude(c => c.Milestones)
                 .ThenInclude(m => m.Goals)
                 .Include(c => c.Company)
