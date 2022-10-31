@@ -12,4 +12,4 @@
 
 
 
-![Alt text](./data-model.PNG?raw=true "Data model diagram")
+![Alt text](./data-model.png?raw=true "Data model diagram")
