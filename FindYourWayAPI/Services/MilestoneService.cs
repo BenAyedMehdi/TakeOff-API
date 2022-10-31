@@ -21,6 +21,7 @@ namespace FindYourWayAPI.Services
             if (!companyService.CompanyExists(id)) return null;
             return await _context.Milestones
                 .Include(m=>m.Goals)
+                .Include(m=>m.Category)
                 .Where(m => m.CompanyId == id)
                 .ToListAsync();
         }
@@ -28,6 +29,7 @@ namespace FindYourWayAPI.Services
         {
             var milestone = await _context.Milestones
                 .Include(m => m.Goals)
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m=>m.MilestoneId==id);
 
             return milestone;
