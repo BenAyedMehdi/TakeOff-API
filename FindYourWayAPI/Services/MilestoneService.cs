@@ -36,13 +36,15 @@ namespace FindYourWayAPI.Services
         {
             var company = await companyService.GetCompany(request.CompanyId);
             if (company == null) return null;
-
             if (request.MilestoneName == null) return null;
+            var category = await _context.Categories.FindAsync(request.CategoryId);
+            if (category == null) return null;
             var milestone = new Milestone
             {
                 MilestoneName = request.MilestoneName,
                 CompanyId = request.CompanyId,
-                Company = company
+                Company = company,
+                Category = category
             };
 
             _context.Milestones.Add(milestone);
