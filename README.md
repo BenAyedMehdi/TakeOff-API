@@ -19,4 +19,4 @@ This API is hosted on Azure and is updated with every commit to the master branc
 
 ### Database Model
 
-The database model is defined in the Software Design Document (SDD) and can be found here [SDD](https://github.com/marouenes/take-off/blob/main/docs/pdf/SWAD.pdf)
+The database model is defined in the Software Design Document (SDD) and can be found here [SDD](https://github.com/marouenes/take-off/blob/main/docs/img/data-model.png)
